@@ -229,7 +229,7 @@ $ sudo apt install -y build-essential wget git vim
 
 
 
-### Install bash-comp
+### Install bash-completion
 
 ```sh
 $ sudo apt install bash-completion
@@ -244,15 +244,13 @@ $ tar xvf go1.13.3.linux-amd64.tar.gz
 $ mv go /usr/local
 ```
 
-edit `.bashcr`, 在文件最后面增加下面的全局变量设置.
+`vim .bashcr`, 在文件最后面增加下面的全局变量设置.
 
 ```sh
-$ vim .bashrc
 --------------------------------------------
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/workspace
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
---------------------------------------------
 ```
 
 
