@@ -213,3 +213,52 @@ pm2 show id
 
 # mysql
 
+
+====================
+
+# ubuntu 18.04.2
+
+### update and upgrade
+
+```sh
+$ sudo apt-get updat
+$ sudo apt-get upgrde
+$ sudo apt install -y build-essential wget git vim
+
+```
+
+
+
+### Install bash-comp
+
+```sh
+$ sudo apt install bash-completion
+$ cp /etc/skel/.bashrc ~/
+```
+
+### Install golang
+
+```sh
+$ wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
+$ tar xvf go1.13.3.linux-amd64.tar.gz
+$ mv go /usr/local
+```
+
+edit `.bashcr`, 在文件最后面增加下面的全局变量设置.
+
+```sh
+$ vim .bashrc
+--------------------------------------------
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/workspace
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+--------------------------------------------
+```
+
+
+
+
+
+
+
+
