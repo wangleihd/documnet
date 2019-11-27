@@ -332,7 +332,7 @@ no crontab for root – using an empty one
 ### 七、重启 Cron 服务，使之生效
 
 ```sh
-service crond restart
+systemctl restart cron.service
 ```
 
 重启之后，一切搞定！
