@@ -300,3 +300,48 @@ python -m synapse.app.homeserver \
   --report-stats=yes|no
  ```
 
+# certbot 自动更新 HTTPS 证书
+
+安装好了 Certbot，给网站安装好了 SSL 证书.
+
+## 五、创建 Cron 文件
+输入以下命令：
+
+```sh
+crontab -e
+```
+
+输入此命令后，提示如下：
+
+```
+no crontab for root – using an empty one
+```
+
+此时相当于准备创建一个 root 用户的空白 crontab 文件。直接按住 shift+分号(打出冒号来)，然后输入 q，回车。退出编辑文件状态。
+
+## 六、添加编辑 Certbot 的自动续期命令
+
+在 root cron 文件中，复制以下代码，粘贴，保存，上传。
+
+```sh
+0 3 */7 * * /bin/certbot renew --renew-hook "/etc/init.d/nginx reload"
+```
+
+以上含义是：每隔 7 天，夜里 3 点整自动执行检查续期命令一次。续期完成后，重启 nginx 服务。
+
+### 七、重启 Cron 服务，使之生效
+
+```sh
+service crond restart
+```
+
+重启之后，一切搞定！
+
+## 八、你想手动尝试 Certbot 证书更新？
+一般是直接使用 renew 命令，即：
+
+```sh
+/usr/bin/certbot renew
+```
+
+但是现在 Certbot 也会自己判断了，没有快到期之前，它也觉得没必要频繁续期。所以看看我们手动去续期的结果：
