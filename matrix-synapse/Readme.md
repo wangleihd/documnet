@@ -307,24 +307,24 @@ python -m synapse.app.homeserver \
 ## 五、创建 Cron 文件
 输入以下命令：
 
+1. 查看crontab定时执行任务列表
+
+```sh
+crontab -l
+````
+
+2. 添加crontab定时执行任务
+
 ```sh
 crontab -e
-```
-
-输入此命令后，提示如下：
-
-```
-no crontab for root – using an empty one
-```
-
-此时相当于准备创建一个 root 用户的空白 crontab 文件。直接按住 shift+分号(打出冒号来)，然后输入 q，回车。退出编辑文件状态。
+````
 
 ## 六、添加编辑 Certbot 的自动续期命令
 
 在 root cron 文件中，复制以下代码，粘贴，保存，上传。
 
 ```sh
-0 3 */7 * * /bin/certbot renew --renew-hook "/etc/init.d/nginx reload"
+0 1 1 * * /usr/bin/certbot renew --renew-hook "/etc/init.d/nginx reload"
 ```
 
 以上含义是：每隔 7 天，夜里 3 点整自动执行检查续期命令一次。续期完成后，重启 nginx 服务。
