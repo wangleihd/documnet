@@ -1,5 +1,15 @@
 # How to Install Matrix Synapse Chat on Ubuntu 18.04 LTS
 
+## Step 0 - ubuntu configure
+
+```sh
+sudo apt-get install build-essential python3-dev libffi-dev \
+  python-pip python-setuptools sqlite3 \
+  libssl-dev python-virtualenv libjpeg-dev libxslt1-dev
+```
+
+
+
 ## Step 1 - Update and Upgrade System
 
 Login to your Ubuntu server, update the repository and upgrade all packages using the apt command below.
@@ -139,6 +149,8 @@ The Letsencrypt tool is installed on the system, now generate the SSL certificat
 
 ```sh
 certbot certonly --rsa-key-size 2048 --standalone --agree-tos --no-eff-email --email hakaselabs@gmail.com -d matrix.hakase-labs.io
+or
+certbot certonly --nginx -d matrix.hakase-labs.io
 ```
 
 The Letsencrypt tool will generate SSL certificate files by running the 'standalone' temporary web server for verification.
@@ -203,6 +215,46 @@ server {
 }
 ```
 
+or
+
+```sh
+server {
+    listen 80;
+	listen [::]:80;
+    server_name matrix.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name matrix.example.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/matrix.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/matrix.example.com/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:8008;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
+server {
+    listen 8448 ssl default_server;
+    listen [::]:8448 ssl default_server;
+    server_name matrix.example.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/matrix.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/matrix.example.com/privkey.pem;
+    location / {
+        proxy_pass http://localhost:8008;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+```
+
 Save and exit.
 
 Activate the virtual host file and test the configuration.
@@ -224,7 +276,7 @@ Nginx installation and configuration as a reverse proxy for the Matrix Synapse h
 
 
 
-## Step 7 - Create a New Matrix User
+## Step 6 - Create a New Matrix User
 At this stage, the matrix synapse homeserver installation and configuration is complete. And in this step, we will show you how to add a new matrix user from the command line server.
 
 To create a new matrix user, run the command below.
@@ -236,4 +288,15 @@ register_new_matrix_user -c /etc/matrix-synapse/homeserver.yaml https://127.0.0.
 Now you need to input the user name, password, and decide whether the user will have the admin privileges or not.
 
 Below is the result on my system.
+
+
+## create homeserver.yaml config file
+
+```sh
+python -m synapse.app.homeserver \
+  --server-name matrix.example.com \
+  --config-path homeserver.yaml \
+  --generate-config \
+  --report-stats=yes|no
+ ```
 
